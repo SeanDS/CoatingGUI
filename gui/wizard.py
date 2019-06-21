@@ -4,9 +4,10 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+from qtpy.QtCore import QObject
 from coatingtk.utils.config import Config
 from coatingtk.materials import MaterialLibrary
-from wizardDialog import *
+from .wizardDialog import *
 
 class Wizard(QObject):
     def __init__(self, parent):

@@ -4,8 +4,8 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-from PyQt4.QtCore import pyqtSlot
-from gui.helpers import to_float, float_set_from_lineedit, int_set_from_lineedit
+from qtpy.QtCore import Slot
+from ..helpers import to_float, float_set_from_lineedit, int_set_from_lineedit
 
 
 class XAxisLimits(object):
@@ -20,21 +20,21 @@ class XAxisLimits(object):
         
         super(XAxisLimits, self).initialise_options()
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbXLimAuto_clicked(self, checked):
         if checked:
             self.config.set('xaxis.limits', 'auto')
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbXLimUser_clicked(self, checked):
         if checked:
             self.config.set('xaxis.limits', 'user')
 
-    @pyqtSlot()
+    @Slot()
     def on_txtXLimMin_editingFinished(self):
         float_set_from_lineedit(self.txtXLimMin, self.config, 'xaxis.min', self)
 
-    @pyqtSlot()
+    @Slot()
     def on_txtXLimMax_editingFinished(self):
         float_set_from_lineedit(self.txtXLimMax, self.config, 'xaxis.max', self)
 
@@ -51,21 +51,21 @@ class YAxisLimits(object):
         
         super(YAxisLimits, self).initialise_options()
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbYLimAuto_clicked(self, checked):
         if checked:
             self.config.set('yaxis.limits', 'auto')
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbYLimUser_clicked(self, checked):
         if checked:
             self.config.set('yaxis.limits', 'user')
 
-    @pyqtSlot()
+    @Slot()
     def on_txtYLimMin_editingFinished(self):
         float_set_from_lineedit(self.txtYLimMin, self.config, 'yaxis.min', self)
 
-    @pyqtSlot()
+    @Slot()
     def on_txtYLimMax_editingFinished(self):
         float_set_from_lineedit(self.txtYLimMax, self.config, 'yaxis.max', self)
 
@@ -78,12 +78,12 @@ class YAxisScale(object):
 
         super(YAxisScale, self).initialise_options()
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbYScaleLin_clicked(self, checked):
         if checked:
             self.config.set('yaxis.scale', 'lin')
     
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbYScaleLog_clicked(self, checked):
         if checked:
             self.config.set('yaxis.scale', 'log')
@@ -98,12 +98,12 @@ class XAxisScale(object):
 
         super(XAxisScale, self).initialise_options()
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbXScaleLin_clicked(self, checked):
         if checked:
             self.config.set('xaxis.scale', 'lin')
     
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_rbXScaleLog_clicked(self, checked):
         if checked:
             self.config.set('xaxis.scale', 'log')
@@ -114,7 +114,7 @@ class XAxisSteps(object):
 
         super(XAxisSteps, self).initialise_options()
 
-    @pyqtSlot()
+    @Slot()
     def on_txtXSteps_editingFinished(self):
         int_set_from_lineedit(self.txtXSteps, self.config, 'xaxis.steps', self)
 

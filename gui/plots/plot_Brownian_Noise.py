@@ -4,16 +4,16 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import baseplot
 import numpy as np
-from PyQt4.QtCore import pyqtSlot
+from qtpy.QtCore import Slot
 import matplotlib as mpl
 
-from mixins import XAxisLimits, XAxisSteps
-from gui.helpers import to_float, float_set_from_lineedit
+from .baseplot import BasePlot, BasePlotOptionWidget
+from .mixins import XAxisLimits, XAxisSteps
+from ..helpers import to_float, float_set_from_lineedit
 
 
-class BrownianNoisePlot(baseplot.BasePlot):
+class BrownianNoisePlot(BasePlot):
     def __init__(self, handle):
         super(BrownianNoisePlot, self).__init__('brownian_noise', handle)
 
@@ -53,7 +53,7 @@ class BrownianNoisePlot(baseplot.BasePlot):
         self.add_copyright()
 
 
-class BrownianNoiseOptions(XAxisSteps, XAxisLimits, baseplot.BasePlotOptionWidget):
+class BrownianNoiseOptions(XAxisSteps, XAxisLimits, BasePlotOptionWidget):
     def __init__(self, parent):
         super(BrownianNoiseOptions, self).__init__('brownian_noise', parent)
 
@@ -63,11 +63,11 @@ class BrownianNoiseOptions(XAxisSteps, XAxisLimits, baseplot.BasePlotOptionWidge
         self.txtBeamSize.setText(to_float(self.config.get('analysis.beam_size')))
         
     # ==== SLOTS ====
-    @pyqtSlot()
+    @Slot()
     def on_txtTemperature_editingFinished(self):
         float_set_from_lineedit(self.txtTemperature, self.config, 'analysis.temperature', self)
         
-    @pyqtSlot()
+    @Slot()
     def on_txtBeamSize_editingFinished(self):
         float_set_from_lineedit(self.txtBeamSize, self.config, 'analysis.beam_size', self)
     

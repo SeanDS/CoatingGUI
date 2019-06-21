@@ -4,14 +4,14 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import baseplot
 import numpy as np
 import matplotlib
-from PyQt4.QtCore import pyqtSlot
-from mixins import YAxisLimits, XAxisLimits, YAxisScale, XAxisSteps
+from qtpy.QtCore import Slot
+from .baseplot import BasePlot, BasePlotOptionWidget
+from .mixins import YAxisLimits, XAxisLimits, YAxisScale, XAxisSteps
 
 
-class R_AnglePlot(baseplot.BasePlot):
+class R_AnglePlot(BasePlot):
 
     def __init__(self, handle):
         super(R_AnglePlot, self).__init__('r_angle', handle)
@@ -80,8 +80,7 @@ class R_AnglePlot(baseplot.BasePlot):
         self.add_copyright()
 
 
-class R_AngleOptions(XAxisLimits, YAxisLimits, YAxisScale, XAxisSteps,
-                     baseplot.BasePlotOptionWidget):
+class R_AngleOptions(XAxisLimits, YAxisLimits, YAxisScale, XAxisSteps, BasePlotOptionWidget):
     def __init__(self, parent):
         super(R_AngleOptions, self).__init__('r_angle', parent)
 

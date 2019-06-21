@@ -4,10 +4,10 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4 import uic
-from helpers import int_conversion_error, float_conversion_error
+from qtpy.QtWidgets import QDialog
+from qtpy.QtCore import Slot
+from qtpy import uic
+from .helpers import int_conversion_error, float_conversion_error
 
 # actions
 WIZARD_BILAYERS = 1
@@ -36,11 +36,11 @@ class WizardDialog(QDialog):
     
     # ==== SLOTS ====
 
-    @pyqtSlot()
+    @Slot()
     def on_btnAddBilayers_clicked(self):
         self.done(WIZARD_BILAYERS)
 
-    @pyqtSlot()
+    @Slot()
     def on_txtNumBilayers_editingFinished(self):
         if self.txtNumBilayers.isModified():
             text = self.txtNumBilayers.text()
@@ -49,22 +49,22 @@ class WizardDialog(QDialog):
             except ValueError:
                 int_conversion_error(text, self)
 
-    @pyqtSlot(str)
+    @Slot(str)
     def on_cbMaterial1_currentIndexChanged(self, text):
         self.material1 = str(text)
 
-    @pyqtSlot(str)
+    @Slot(str)
     def on_cbMaterial2_currentIndexChanged(self, text):
         self.material2 = str(text)
 
-    @pyqtSlot(bool)
+    @Slot(bool)
     def on_chkAddCap_toggled(self, state):
         self.add_hw_cap = state
 
-    @pyqtSlot(int)
+    @Slot(int)
     def on_sbShiftPercentage_valueChanged(self, value):
         self.shift_percentage = value
 
-    @pyqtSlot()
+    @Slot()
     def on_btnShift_clicked(self):
         self.done(WIZARD_SHIFT)

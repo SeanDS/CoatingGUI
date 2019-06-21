@@ -4,13 +4,14 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4 import uic
+import math
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import QDialog
+from qtpy import uic
 from coatingtk.utils.config import Config
 from coatingtk.materials import MaterialLibrary
-from helpers import to_float
-import math
+from .helpers import to_float
 
 class UnnamedMaterialException(Exception):
     pass
@@ -110,7 +111,7 @@ class MaterialDialog(QDialog):
 
     # ==== SLOTS ====
 
-    @pyqtSlot()
+    @Slot()
     def on_btnRefrIndexFile_clicked(self):
         filename = QFileDialog.getOpenFileName(self, 'Select refractive index data file',
                             '.', 'Data Files (*.asc *.csv *.dat *.txt)')

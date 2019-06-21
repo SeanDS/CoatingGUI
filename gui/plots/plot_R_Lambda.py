@@ -4,13 +4,13 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import baseplot
 import numpy as np
 import matplotlib
-from mixins import YAxisLimits, XAxisLimits, YAxisScale, XAxisSteps
-from PyQt4.QtCore import pyqtSlot
+from .mixins import YAxisLimits, XAxisLimits, YAxisScale, XAxisSteps
+from .baseplot import BasePlot, BasePlotOptionWidget
+from qtpy.QtCore import Slot
 
-class R_LambdaPlot(baseplot.BasePlot):
+class R_LambdaPlot(BasePlot):
     def __init__(self, handle):
         super(R_LambdaPlot, self).__init__('r_lambda', handle)
         
@@ -76,8 +76,7 @@ class R_LambdaPlot(baseplot.BasePlot):
         self.add_copyright()
 
 
-class R_LambdaOptions(XAxisSteps, XAxisLimits, YAxisLimits, YAxisScale,
-                      baseplot.BasePlotOptionWidget):
+class R_LambdaOptions(XAxisSteps, XAxisLimits, YAxisLimits, YAxisScale, BasePlotOptionWidget):
     def __init__(self, parent):
         super(R_LambdaOptions, self).__init__('r_lambda', parent)
 

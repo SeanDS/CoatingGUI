@@ -18,8 +18,8 @@ Copyright © 2005 Florent Rougon, 2006 Darren Dale
 
 __version__ = "1.0.0"
 
-from PyQt4.QtGui import QSizePolicy
-from PyQt4.QtCore import QSize
+from qtpy.QtWidgets import QSizePolicy
+from qtpy.QtCore import QSize
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as Canvas
 from matplotlib.figure import Figure
@@ -30,7 +30,7 @@ rcParams['font.size'] = 9
 
 class MatplotlibWidget(Canvas):
     """
-    MatplotlibWidget inherits PyQt4.QtGui.QWidget
+    MatplotlibWidget inherits qtpy.QtGui.QWidget
     and matplotlib.backend_bases.FigureCanvasBase
     
     Options: option_name (default_value)
@@ -46,7 +46,6 @@ class MatplotlibWidget(Canvas):
     width (4): width in inches
     height (3): height in inches
     dpi (100): resolution in dpi
-    hold (False): if False, figure will be cleared each time plot is called
     
     Widget attributes:
     -----------------
@@ -55,7 +54,7 @@ class MatplotlibWidget(Canvas):
     
     Example:
     -------
-    self.widget = MatplotlibWidget(self, yscale='log', hold=True)
+    self.widget = MatplotlibWidget(self, yscale='log')
     from numpy import linspace
     x = linspace(-10, 10)
     self.widget.axes.plot(x, x**2)
@@ -63,7 +62,7 @@ class MatplotlibWidget(Canvas):
     """
     def __init__(self, parent=None, title='', xlabel='', ylabel='',
                  xlim=None, ylim=None, xscale='linear', yscale='linear',
-                 width=4, height=3, dpi=100, hold=False):
+                 width=4, height=3, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
         self.axes = self.figure.add_subplot(111)
         self.axes.set_title(title)
@@ -77,7 +76,6 @@ class MatplotlibWidget(Canvas):
             self.axes.set_xlim(*xlim)
         if ylim is not None:
             self.axes.set_ylim(*ylim)
-        self.axes.hold(hold)
 
         Canvas.__init__(self, self.figure)
         self.setParent(parent)
@@ -99,7 +97,7 @@ class MatplotlibWidget(Canvas):
 #===============================================================================
 if __name__ == '__main__':
     import sys
-    from PyQt4.QtGui import QMainWindow, QApplication
+    from qtpy.QtGui import QMainWindow, QApplication
     from numpy import linspace
     
     class ApplicationWindow(QMainWindow):

@@ -7,20 +7,21 @@
 import re
 
 from os.path import basename, splitext
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4 import uic
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QFileDialog
+from qtpy import uic
 
-import plothandler
-import wizard
-from version import version_number, version_string, compare_versions
+from . import plothandler
+from . import wizard
+from .version import version_number, version_string, compare_versions
 from coatingtk.materials import MaterialLibrary
 from coatingtk.coating import Coating
 from coatingtk.utils.config import Config
-from helpers import export_data, block_signals, float_set_from_lineedit, export_stack_formula
+from .helpers import export_data, block_signals, float_set_from_lineedit, export_stack_formula
 
-from materialDialog import MaterialDialog
-from wizard import Wizard
+from .materialDialog import MaterialDialog
+from .wizard import Wizard
 
 def add_extension_if_missing(filename, ext):
     if filename.endswith(ext):
@@ -53,7 +54,7 @@ class MainWindow(QMainWindow):
             try:
                 fn = add_extension_if_missing(options['project'], '.cgp')
                 self.config.load(fn)
-            except IOError, e:
+            except IOError as e:
                 QMessageBox.critical(self, 'Could not open file', str(e))
         
         self.initialise_plotoptions()
@@ -62,7 +63,7 @@ class MainWindow(QMainWindow):
 
         geometry = self.config.get('window_geometry')
         if geometry:
-            geometry = QByteArray.fromHex(self.config.get('window_geometry'))
+            geometry = QByteArray.fromHex(self.config.get('window_geometry').encode())
             self.restoreGeometry(geometry)
 
         self.stbStatus.showMessage(version_string)
@@ -86,7 +87,7 @@ class MainWindow(QMainWindow):
     def initialise_plotoptions(self):
         with block_signals(self.cbPlotType) as cb:
             cb.clear()
-            for k,v in self.plots.iteritems():
+            for k,v in self.plots.items():
                 cb.addItem(v['description'], k)
             setplot = self.config.get('plot.plottype')
             cb.setCurrentIndex(cb.findData(setplot))
@@ -154,7 +155,7 @@ class MainWindow(QMainWindow):
     
     ### SLOTS - GENERIC
 
-    @pyqtSlot()
+    @Slot()
     def handle_modified(self):
         self.update_title(changed=True)
 
@@ -168,7 +169,7 @@ class MainWindow(QMainWindow):
     
     ### SLOTS - PLOT WINDOW
 
-    @pyqtSlot()
+    @Slot()
     def on_btnUpdate_clicked(self):
         try:
             coating = self.build_coating()
@@ -176,7 +177,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, 'Material Error', str(e))
             return
         idx = self.cbPlotType.currentIndex()
-        plot = str(self.cbPlotType.itemData(idx).toString())
+        plot = str(self.cbPlotType.itemData(idx))
 
         self.pltMain.figure.clear()
         self.plotHandle = self.pltMain.figure.add_subplot(111)
@@ -185,7 +186,7 @@ class MainWindow(QMainWindow):
         plot.plot(coating)
         self.pltMain.draw()
 
-    @pyqtSlot(str)
+    @Slot(str)
     def update_plot_widget(self, plot):
         # if plot has it's own widget, then load it
         klass = self.plots[plot]['options']
@@ -201,38 +202,38 @@ class MainWindow(QMainWindow):
         
     ### SLOTS - STACK TAB
 
-    @pyqtSlot()
+    @Slot()
     def on_btnRemoveLayer_clicked(self):
         self.tblStack.removeRow(self.tblStack.currentRow())
         self.config.set('coating.layers', self.get_layers())
 
-    @pyqtSlot()
+    @Slot()
     def on_btnAddLayer_clicked(self):
         row = self.tblStack.currentRow()+1
         self.tblStack.insertRow(row)
 
-    @pyqtSlot()
+    @Slot()
     def on_btnClearStack_clicked(self):
         self.config.set('coating.layers', [])
         self.initialise_stack()
 
-    @pyqtSlot(str)
+    @Slot(str)
     def on_cbSuperstrate_currentIndexChanged(self, text):
         self.config.set('coating.superstrate', str(text))
 
-    @pyqtSlot(str)
+    @Slot(str)
     def on_cbSubstrate_currentIndexChanged(self, text):
         self.config.set('coating.substrate', str(text))
     
-    @pyqtSlot()
+    @Slot()
     def on_txtLambda0_editingFinished(self):
         float_set_from_lineedit(self.txtLambda0, self.config, 'coating.lambda0', self)
     
-    @pyqtSlot()
+    @Slot()
     def on_txtAOI_editingFinished(self):
         float_set_from_lineedit(self.txtAOI, self.config, 'coating.AOI', self)
 
-    @pyqtSlot(int, int)
+    @Slot(int, int)
     def on_tblStack_cellChanged(self, row, col):
         txt = self.tblStack.item(row, col).text()
         if col == 1:
@@ -260,7 +261,7 @@ class MainWindow(QMainWindow):
 
         self.config.set('coating.layers', self.get_layers())
 
-    @pyqtSlot()
+    @Slot()
     def on_btnWizard_clicked(self):
         wizard = Wizard(self)
         if wizard.run():
@@ -268,16 +269,16 @@ class MainWindow(QMainWindow):
 
     ### SLOTS - PLOT TAB
 
-    @pyqtSlot(int)
+    @Slot(int)
     def on_cbPlotType_currentIndexChanged(self, plotidx):
-        plot = str(self.cbPlotType.itemData(plotidx).toString())
+        plot = str(self.cbPlotType.itemData(plotidx))
         self.update_plot_widget(plot) 
         self.config.set('plot.plottype', plot)
 
 
     ### SLOTS - MATERIALS TAB
 
-    @pyqtSlot()
+    @Slot()
     def update_material_list(self):
         # save selection
         sub = str(self.cbSubstrate.currentText())
@@ -299,7 +300,7 @@ class MainWindow(QMainWindow):
             cbsub.setCurrentIndex(self.cbSubstrate.findText(sub))
             cbsup.setCurrentIndex(self.cbSuperstrate.findText(sup))
 
-    @pyqtSlot()
+    @Slot()
     def on_btnAddMaterial_clicked(self):
         dlg = MaterialDialog(self)
         dlg.load_material()
@@ -307,7 +308,7 @@ class MainWindow(QMainWindow):
             dlg.save_material()
             self.update_material_list()
 
-    @pyqtSlot()
+    @Slot()
     def on_btnEditMaterial_clicked(self):
         row = self.lstMaterials.currentRow()
         if row >= 0:
@@ -317,7 +318,7 @@ class MainWindow(QMainWindow):
             if dlg.exec_() == QDialog.Accepted:
                 dlg.save_material()
 
-    @pyqtSlot()
+    @Slot()
     def on_btnDeleteMaterial_clicked(self):
         row = self.lstMaterials.currentRow()
         if row >= 0:
@@ -330,14 +331,14 @@ class MainWindow(QMainWindow):
 
     ### SLOTS - MENU
 
-    @pyqtSlot()
+    @Slot()
     def on_actionExport_triggered(self):
         filename = QFileDialog.getSaveFileName(self, 'Export Plot',
                             splitext(self.filename)[0]+'.pdf', 'PDF (*.pdf)');
         if filename:
             self.pltMain.figure.savefig(str(filename))
     
-    @pyqtSlot()
+    @Slot()
     def on_actionExportFormula_triggered(self):
         filename = QFileDialog.getSaveFileName(self, 'Export stack formula',
                             splitext(self.filename)[0]+'.txt', 'Text file (*.txt)');
@@ -350,7 +351,7 @@ class MainWindow(QMainWindow):
             export_stack_formula(coating, self.config.get('coating.lambda0'),
                                  str(filename))
 
-    @pyqtSlot()
+    @Slot()
     def on_actionExportData_triggered(self):
         xdata = []
         ydata = []
@@ -380,7 +381,7 @@ class MainWindow(QMainWindow):
         if filename:
             export_data(str(filename), xdata, ydata, labels)
 
-    @pyqtSlot()
+    @Slot()
     def on_actionSave_triggered(self):
         filename = str(QFileDialog.getSaveFileName(self, 'Save Coating Project',
                             self.filename, 'Coating Project Files (*.cgp)'))
@@ -391,7 +392,7 @@ class MainWindow(QMainWindow):
             self.config.save(filename)
             self.update_title(basename(filename))
 
-    @pyqtSlot()
+    @Slot()
     def on_actionOpen_triggered(self):
         if self.modified:
             reply = QMessageBox.question(self, 'Unsaved Changes',
@@ -414,7 +415,7 @@ class MainWindow(QMainWindow):
             self.initialise_materials()
             self.initialise_stack()
 
-    @pyqtSlot()
+    @Slot()
     def on_actionAbout_triggered(self):
         QMessageBox.about(self, version_string,
             """

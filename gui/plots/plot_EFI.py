@@ -4,13 +4,13 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import baseplot
 import numpy as np
-from PyQt4.QtCore import pyqtSlot
-from mixins import YAxisLimits, YAxisScale, XAxisSteps
-from gui.helpers import to_float, float_set_from_lineedit
+from qtpy.QtCore import Slot
+from .baseplot import BasePlot, BasePlotOptionWidget
+from .mixins import YAxisLimits, YAxisScale, XAxisSteps
+from ..helpers import to_float, float_set_from_lineedit
 
-class EFIPlot(baseplot.BasePlot):
+class EFIPlot(BasePlot):
     @staticmethod
     def get_alpha(n):
         """Converts refractive index n into alpha transparency value"""
@@ -64,16 +64,16 @@ class EFIPlot(baseplot.BasePlot):
 
         # add in colored rectangles to visually indicate
         # layers and their index of refraction
-        for ii in range(0, xvalues/2):
+        for ii in range(0, xvalues//2):
             self.handle.axvspan(X[ii*2], X[ii*2+1],
                 color=(0.52,0.61,0.73), alpha=EFIPlot.get_alpha(Y[ii*2]))
             if ii == 0:
                 text = 'superstrate'
-            elif ii == xvalues/2 - 1:
+            elif ii == xvalues//2 - 1:
                 text = 'substrate'
             else:
                 text = '{:.0f}nm'.format(stack.stacks_d[ii-1])
-            self.handle.text((X[ii*2]+X[ii*2+1])/2, 0.8, text, 
+            self.handle.text((X[ii*2]+X[ii*2+1])//2, 0.8, text, 
                 horizontalalignment='center', rotation='vertical')
 
         self.handle.set_xlim(xmin, xmax)
@@ -85,7 +85,7 @@ class EFIPlot(baseplot.BasePlot):
        
 
 
-class EFIPlotOptions(YAxisLimits, YAxisScale, XAxisSteps, baseplot.BasePlotOptionWidget):
+class EFIPlotOptions(YAxisLimits, YAxisScale, XAxisSteps, BasePlotOptionWidget):
     def __init__(self, parent):
         super(EFIPlotOptions, self).__init__('EFI', parent)
 
@@ -94,7 +94,7 @@ class EFIPlotOptions(YAxisLimits, YAxisScale, XAxisSteps, baseplot.BasePlotOptio
         self.txtLambda.setText(to_float(self.config.get('analysis.lambda')))
 
     # ==== SLOTS ====
-    @pyqtSlot()
+    @Slot()
     def on_txtLambda_editingFinished(self):
         float_set_from_lineedit(self.txtLambda, self.config, 'analysis.lambda', self)
 

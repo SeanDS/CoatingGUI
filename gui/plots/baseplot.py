@@ -5,9 +5,10 @@
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 import abc
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4 import uic
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import QWidget
+from qtpy import uic
 from coatingtk.utils.config import Config
 from gui.version import version_string
 
@@ -38,7 +39,7 @@ class BasePlot(object):
     
     def __init__(self, name, handle):
         self.handle = handle
-        self.handle.set_color_cycle(self.colors)
+        self.handle.set_prop_cycle('color', self.colors)
         self.config = Config.Instance().view('plot.'+name)
 
     @abc.abstractmethod

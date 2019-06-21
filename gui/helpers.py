@@ -6,8 +6,8 @@
 
 import numpy as np
 from contextlib import contextmanager
-from PyQt4.QtGui import QMessageBox
-from version import version_string
+from qtpy.QtWidgets import QMessageBox
+from .version import version_string
 
 
 def export_data(filename, xdata, ydata, labels):
@@ -59,7 +59,7 @@ def export_stack_formula(coating, lambda0, filename):
         fp.write('Substrate: {0}\n'.format(coating.substrate.name))
 
         designations = get_designations(coating, lambda0)
-        for m, d in designations.iteritems():
+        for m, d in designations.items():
             fp.write('{0}: {1}\n'.format(d, m))
 
         formula = []

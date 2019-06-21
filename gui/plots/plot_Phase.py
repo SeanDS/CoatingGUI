@@ -4,13 +4,13 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import baseplot
 import numpy as np
 import matplotlib
-from PyQt4.QtCore import pyqtSlot
-from mixins import YAxisLimits, XAxisLimits, XAxisSteps
+from qtpy.QtCore import Slot
+from .baseplot import BasePlot, BasePlotOptionWidget
+from .mixins import YAxisLimits, XAxisLimits, XAxisSteps
 
-class PhasePlot(baseplot.BasePlot):
+class PhasePlot(BasePlot):
     def __init__(self, handle):
         super(PhasePlot, self).__init__('phase', handle)
 
@@ -49,8 +49,7 @@ class PhasePlot(baseplot.BasePlot):
         self.add_copyright()
 
 
-class PhaseOptions(XAxisLimits, YAxisLimits, XAxisSteps,
-                   baseplot.BasePlotOptionWidget):
+class PhaseOptions(XAxisLimits, YAxisLimits, XAxisSteps, BasePlotOptionWidget):
     def __init__(self, parent):
         super(PhaseOptions, self).__init__('phase', parent)
 

@@ -18,4 +18,4 @@ def collect_plots():
     return plots
 
 if __name__ == '__main__':
-    print collect_plots()
+    print(collect_plots())

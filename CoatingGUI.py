@@ -7,9 +7,9 @@
 import sys
 import argparse
 from gui.mainWindow import MainWindow
-from PyQt4 import QtGui
+from qtpy import QtWidgets
 
-qApp = QtGui.QApplication(sys.argv)
+qApp = QtWidgets.QApplication(sys.argv)
 
 parser = argparse.ArgumentParser(prog='CoatingGUI.py')
 parser.add_argument('-p', '--project', help='open CoatingGUI project file PROJECT')
