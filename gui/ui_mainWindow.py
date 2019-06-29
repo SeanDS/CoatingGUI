@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from qtpy import QtCore, QtGui
+from qtpy.QtWidgets import QDialog
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
