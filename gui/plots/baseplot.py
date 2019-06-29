@@ -52,8 +52,8 @@ class BasePlot(object):
         ax.grid(which='major', color='0.7', linestyle='-')
         ax.grid(which='minor', color='0.7', linestyle=':')
 
-    def add_legend(self, handles, entries):
-        self.handle.legend(handles, entries, fontsize=10, frameon=False)
+    def add_legend(self, handles, entries, loc="upper right"):
+        self.handle.legend(handles, entries, fontsize=10, frameon=False, loc=loc)
 
     def add_copyright(self):
         self.handle.set_title(version_string, loc='right', size=8)
