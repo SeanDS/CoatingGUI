@@ -4,10 +4,10 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-import numpy as np
 from contextlib import contextmanager
+import numpy as np
 from qtpy.QtWidgets import QMessageBox
-from .version import version_string
+from . import __version__
 
 
 def export_data(filename, xdata, ydata, labels):
@@ -33,7 +33,7 @@ def export_data(filename, xdata, ydata, labels):
 
     data = np.vstack((X, Y))
 
-    header = version_string + "\n\n" + "\t".join(labels)
+    header = __version__ + "\n\n" + "\t".join(labels)
     np.savetxt(filename, data.T, delimiter="\t", fmt='%.5g', header=header)
 
 def get_designations(coating, lambda0):

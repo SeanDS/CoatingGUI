@@ -4,22 +4,19 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 # Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+from os.path import basename, splitext
 import re
 
-from os.path import basename, splitext
 from qtpy.QtCore import *
 from qtpy.QtGui import *
 from qtpy.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QFileDialog
 from qtpy import uic
-
-from . import plothandler
-from . import wizard
-from .version import version_number, version_string, compare_versions
 from coatingtk.materials import MaterialLibrary
 from coatingtk.coating import Coating
 from coatingtk.utils.config import Config
-from .helpers import export_data, block_signals, float_set_from_lineedit, export_stack_formula
 
+from . import __version__, version_string, newer_version, plothandler, wizard
+from .helpers import export_data, block_signals, float_set_from_lineedit, export_stack_formula
 from .materialDialog import MaterialDialog
 from .wizard import Wizard
 
@@ -407,8 +404,7 @@ class MainWindow(QMainWindow):
             self.config.load(filename)
             self.update_title(basename(filename))
 
-            filever = self.config.get('version_number')
-            if filever and compare_versions(version_number, filever) < 0:
+            if filever and newer_version(filever):
                 QMessageBox.warning(self, 'Newer file version detected',
                     'This coating project was created with a newer version of CoatingGUI. This may or may not work out well...', QMessageBox.Ok)
             self.initialise_plotoptions()

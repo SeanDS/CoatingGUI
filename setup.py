@@ -5,6 +5,7 @@ with open("README.md") as readme_file:
     README = readme_file.read()
 
 REQUIREMENTS = [
+    "packaging",
     "numpy",
     "matplotlib",
     "setuptools_scm",
